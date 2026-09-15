@@ -1,0 +1,6 @@
+name: dorado
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  - bioconda::dorado=0.9.1

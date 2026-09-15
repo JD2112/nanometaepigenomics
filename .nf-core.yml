@@ -1,16 +1,2 @@
 repository_type: pipeline
-
-nf_core_version: 4.1.0
-
-lint: {}
-
-template:
-  org: nf-core
-  name: nanometaepigenomics
-  description: Metagenomic assembly, binning, and native methylation analysis for
-    food samples
-  author: Jyotirmoy Das
-  version: 1.0.0dev
-  force: true
-  outdir: .
-  is_nfcore: true
+org_path: nf-core

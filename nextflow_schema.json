@@ -40,6 +40,54 @@
                     "type": "string",
                     "description": "MultiQC report title. Printed as page header, used for filename if not otherwise specified.",
                     "fa_icon": "fas fa-file-signature"
+                },
+                "skip_basecalling": {
+                    "type": "boolean",
+                    "description": "Skip Dorado basecalling when input data consists of pre-basecalled BAMs or FASTQs.",
+                    "default": false
+                },
+                "dorado_model": {
+                    "type": "string",
+                    "description": "Dorado basecalling model name.",
+                    "default": "dna_r10.4.1_e8.2_400bps_sup@v4.3.0"
+                },
+                "dorado_modbase": {
+                    "type": "string",
+                    "description": "Dorado modified base calling model (e.g. 5mCG_5hmCG or 5mC_5hmC).",
+                    "default": "5mCG_5hmCG"
+                },
+                "flye_mode": {
+                    "type": "string",
+                    "description": "Flye assembly mode (e.g. --nano-hq, --nano-raw, --nano-corr).",
+                    "default": "--nano-hq"
+                },
+                "human_fasta": {
+                    "type": "string",
+                    "description": "Path to Human reference genome FASTA for decontamination."
+                },
+                "host_fasta": {
+                    "type": "string",
+                    "description": "Path to food-host reference genome FASTA for host depletion."
+                },
+                "genomad_db": {
+                    "type": "string",
+                    "description": "Path to geNomad database directory."
+                },
+                "checkm2_db": {
+                    "type": "string",
+                    "description": "Path to CheckM2 DIAMOND database."
+                },
+                "gtdb_db": {
+                    "type": "string",
+                    "description": "Path to GTDB-Tk reference database."
+                },
+                "amr_db": {
+                    "type": "string",
+                    "description": "Path to AMRFinderPlus database."
+                },
+                "bakta_db": {
+                    "type": "string",
+                    "description": "Path to Bakta reference database."
                 }
             }
         },

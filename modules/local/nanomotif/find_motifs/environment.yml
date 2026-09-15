@@ -1,0 +1,6 @@
+name: nanomotif
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  - bioconda::nanomotif=0.4.13

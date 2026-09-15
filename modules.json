@@ -5,14 +5,124 @@
         "https://github.com/nf-core/modules.git": {
             "modules": {
                 "nf-core": {
+                    "abricate/run": {
+                        "branch": "master",
+                        "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
+                        "installed_by": ["modules"]
+                    },
+                    "amrfinderplus/run": {
+                        "branch": "master",
+                        "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
+                        "installed_by": ["modules"]
+                    },
+                    "bakta/bakta": {
+                        "branch": "master",
+                        "git_sha": "2080397432fcb0d079121dbacf22ce42ef175cec",
+                        "installed_by": ["modules"]
+                    },
+                    "checkm2/databasedownload": {
+                        "branch": "master",
+                        "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
+                        "installed_by": ["modules"]
+                    },
+                    "checkm2/predict": {
+                        "branch": "master",
+                        "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
+                        "installed_by": ["modules"]
+                    },
                     "fastqc": {
                         "branch": "master",
                         "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
                         "installed_by": ["modules"]
                     },
+                    "filtlong": {
+                        "branch": "master",
+                        "git_sha": "83819fff250f4fe6747fd8855fb3039eea22e5b7",
+                        "installed_by": ["modules"]
+                    },
+                    "flye": {
+                        "branch": "master",
+                        "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
+                        "installed_by": ["modules"]
+                    },
+                    "genomad/endtoend": {
+                        "branch": "master",
+                        "git_sha": "781f2625386fe0bf2f337c7b99f56e618c59fc99",
+                        "installed_by": ["modules"]
+                    },
+                    "gtdbtk/classifywf": {
+                        "branch": "master",
+                        "git_sha": "b581ebb37c529fa07e22c38d128a7c5c273ed286",
+                        "installed_by": ["modules"]
+                    },
+                    "metabat2/jgisummarizebamcontigdepths": {
+                        "branch": "master",
+                        "git_sha": "5be91832f7c6a2d229f900a239d9532c9ae133c7",
+                        "installed_by": ["modules"]
+                    },
+                    "metabat2/metabat2": {
+                        "branch": "master",
+                        "git_sha": "5be91832f7c6a2d229f900a239d9532c9ae133c7",
+                        "installed_by": ["modules"]
+                    },
+                    "minimap2/align": {
+                        "branch": "master",
+                        "git_sha": "135d883a43b1a2324b4112cd270cf22e20835533",
+                        "installed_by": ["modules"]
+                    },
+                    "minimap2/index": {
+                        "branch": "master",
+                        "git_sha": "135d883a43b1a2324b4112cd270cf22e20835533",
+                        "installed_by": ["modules"]
+                    },
+                    "modkit/callmods": {
+                        "branch": "master",
+                        "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
+                        "installed_by": ["modules"]
+                    },
+                    "modkit/pileup": {
+                        "branch": "master",
+                        "git_sha": "924e729cc75be5ab9ff8d37c8e7c2edfb36a8ce5",
+                        "installed_by": ["modules"]
+                    },
+                    "mosdepth": {
+                        "branch": "master",
+                        "git_sha": "999b9db1d6b8bdc591e1168e183f4cc87d6606f9",
+                        "installed_by": ["modules"]
+                    },
                     "multiqc": {
                         "branch": "master",
                         "git_sha": "98403d15b0e50edae1f3fec5eae5e24982f1fade",
+                        "installed_by": ["modules"]
+                    },
+                    "nanoplot": {
+                        "branch": "master",
+                        "git_sha": "cc4d441624bd2a0db697502bdde9005a5a5f0b36",
+                        "installed_by": ["modules"]
+                    },
+                    "plasmidfinder": {
+                        "branch": "master",
+                        "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
+                        "installed_by": ["modules"]
+                    },
+                    "porechop/abi": {
+                        "branch": "master",
+                        "git_sha": "4aceeffaed1eaa12c0e198b166f898e91e4e781d",
+                        "installed_by": ["modules"]
+                    },
+                    "samtools/index": {
+                        "branch": "master",
+                        "git_sha": "9339809fcb90af8a8b7051e6cd914894d5c52002",
+                        "installed_by": ["modules"]
+                    },
+                    "samtools/sort": {
+                        "branch": "master",
+                        "git_sha": "9339809fcb90af8a8b7051e6cd914894d5c52002",
+                        "installed_by": ["modules"]
+                    },
+                    "semibin/singleeasybin": {
+                        "branch": "master",
+                        "git_sha": "9f8642c41bf67d2787820e4c4aa34c0356a0d464",
                         "installed_by": ["modules"]
                     }
                 }
