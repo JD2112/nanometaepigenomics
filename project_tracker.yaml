@@ -1,0 +1,17 @@
+name: nf-core-nanometaepigenomics
+description: Auto-generated project tracking file.
+status: Processing
+created_at: '2026-09-15'
+last_modified: '2026-09-15 22:54:11'
+tools: []
+tasks: []
+has_git: true
+is_bfxpm_compliant: false
+tags:
+- nanopore
+- metagenomics
+- methylation
+- Nextflow
+- nf-core
+notes_public: ''
+notes_personal: ''
