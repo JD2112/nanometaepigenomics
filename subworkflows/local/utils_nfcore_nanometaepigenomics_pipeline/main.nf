@@ -233,26 +233,45 @@ def genomeExistsError() {
 // Generate methods description for MultiQC
 //
 def toolCitationText() {
-    // TODO nf-core: Optionally add in-text citation tools to this list.
-    // Can use ternary operators to dynamically construct based conditions, e.g. params["run_xyz"] ? "Tool (Foo et al. 2023)" : "",
-    // Uncomment function in methodsDescriptionText to render in MultiQC report
     def citation_text = [
             "Tools used in the workflow included:",
-            "FastQC (Andrews 2010),",
-            "MultiQC (Ewels et al. 2016)",
-            "."
+            "Dorado (Oxford Nanopore Technologies),",
+            "NanoPlot (De Coster et al. 2018),",
+            "Porechop_ABI (Bonsai Bioinformatics),",
+            "Filtlong (Wick 2021),",
+            "Minimap2 (Li 2018),",
+            "Samtools (Danecek et al. 2021),",
+            "Mosdepth (Pedersen and Quinlan 2018),",
+            "metaFlye (Kolmogorov et al. 2020),",
+            "geNomad (Camargo et al. 2023),",
+            "MetaBAT2 (Kang et al. 2019),",
+            "CheckM2 (Chklovski et al. 2023),",
+            "GTDB-Tk (Chaumeil et al. 2020),",
+            "Modkit (Oxford Nanopore Technologies),",
+            "Nanomotif (Olsen et al. 2024),",
+            "AMRFinderPlus (Feldgarden et al. 2021),",
+            "Abricate (Seemann 2020),",
+            "PlasmidFinder (Carattoli et al. 2014),",
+            "Bakta (Schwengers et al. 2021), and",
+            "MultiQC (Ewels et al. 2016)."
         ].join(' ').trim()
 
     return citation_text
 }
 
 def toolBibliographyText() {
-    // TODO nf-core: Optionally add bibliographic entries to this list.
-    // Can use ternary operators to dynamically construct based conditions, e.g. params["run_xyz"] ? "<li>Author (2023) Pub name, Journal, DOI</li>" : "",
-    // Uncomment function in methodsDescriptionText to render in MultiQC report
     def reference_text = [
-            "<li>Andrews S, (2010) FastQC, URL: https://www.bioinformatics.babraham.ac.uk/projects/fastqc/).</li>",
-            "<li>Ewels, P., Magnusson, M., Lundin, S., & Käller, M. (2016). MultiQC: summarize analysis results for multiple tools and samples in a single report. Bioinformatics , 32(19), 3047–3048. doi: /10.1093/bioinformatics/btw354</li>"
+            "<li>De Coster W, et al. (2018) NanoPack: visualizing and processing long-read sequencing data. Bioinformatics, 34(15):2666-2669.</li>",
+            "<li>Li H. (2018) Minimap2: pairwise alignment for nucleotide sequences. Bioinformatics, 34(18):3094-3100.</li>",
+            "<li>Kolmogorov M, et al. (2020) metaFlye: scalable long-read metagenome assembly using repeat graphs. Nat Methods, 17(11):1103-1110.</li>",
+            "<li>Camargo AP, et al. (2023) Identification of mobile genetic elements with geNomad. Nat Biotechnol.</li>",
+            "<li>Kang DD, et al. (2019) MetaBAT 2: an adaptive binning algorithm for robust and efficient genome reconstruction. PeerJ, 7:e7359.</li>",
+            "<li>Chklovski A, et al. (2023) CheckM2: rapid, scalable and accurate assessment of microbial genome quality. Nat Methods, 20(8):1203-1212.</li>",
+            "<li>Chaumeil PA, et al. (2020) GTDB-Tk: a toolkit to classify genomes with the Genome Taxonomy Database. Bioinformatics, 36(6):1925-1927.</li>",
+            "<li>Olsen SO, et al. (2024) Nanomotif: identification of bacterial methylation motifs from Oxford Nanopore sequencing. bioRxiv.</li>",
+            "<li>Feldgarden M, et al. (2021) AMRFinderPlus and the Reference Gene Catalog. Sci Rep, 11(1):12728.</li>",
+            "<li>Schwengers O, et al. (2021) Bakta: rapid and standardized annotation of bacterial genomes. Microb Genom, 7(11):000685.</li>",
+            "<li>Ewels P, et al. (2016) MultiQC: summarize analysis results for multiple tools and samples in a single report. Bioinformatics, 32(19):3047-3048.</li>"
         ].join(' ').trim()
 
     return reference_text

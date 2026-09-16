@@ -21,54 +21,71 @@
 
 ## Introduction
 
-**nf-core/nanometaepigenomics** is a bioinformatics pipeline that ...
+**nf-core/nanometaepigenomics** is a clinical-grade, reproducible bioinformatics pipeline designed for Oxford Nanopore Technologies (ONT) metagenomic sequencing. It couples high-accuracy long-read assembly and metagenome-assembled genome (MAG) recovery with native bacterial epigenetic profiling (5mC/5hmC methylation calling and motif identification).
 
-<!-- TODO nf-core:
-   Complete this sentence with a 2-3 sentence summary of what types of data the pipeline ingests, a brief overview of the
-   major pipeline sections and the types of output it produces. You're giving an overview to someone new
-   to nf-core here, in 15-20 seconds. For an example, see https://github.com/nf-core/rnaseq/blob/master/README.md#introduction
--->
+The pipeline is optimized for food safety, agricultural, and clinical pathogen surveillance where understanding bacterial strain diversity, mobile genetic elements (plasmids/phages), antimicrobial resistance (AMR), and host-contaminant depletion is critical.
 
-<!-- TODO nf-core: Include a figure that guides the user through the major workflow steps. Many nf-core
-     workflows use the "tube map" design for that. See https://nf-co.re/docs/community/brand/workflow-schematics#examples for examples.   -->
-<!-- TODO nf-core: Fill in short bullet-pointed list of the default steps in the pipeline -->1. Read QC ([`FastQC`](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/))2. Present QC for raw reads ([`MultiQC`](http://multiqc.info/))
+### Pipeline Summary
+
+1. **Raw Read Preflight QC**: Run [`NanoPlot`](https://github.com/wdecoster/NanoPlot) on raw long reads.
+2. **Basecalling & Quality Preprocessing**:
+   - Optional GPU-accelerated basecalling & modified base calling with [`Dorado`](https://github.com/nanoporetech/dorado).
+   - Adapter and chimera trimming using [`Porechop_ABI`](https://github.com/bonsai-team/Porechop_ABI).
+   - Length and quality filtering using [`Filtlong`](https://github.com/rrwick/Filtlong).
+3. **Decontamination & Host Depletion**:
+   - Two-stage read screening and removal using [`Minimap2`](https://github.com/lh3/minimap2) and [`Samtools`](http://www.htslib.org/):
+     - Stage 1: Discard human host reads (GRCh38) for privacy and clinical compliance.
+     - Stage 2: Deplete food-host or background host reads (e.g., plant or animal tissue).
+   - Decontamination metrics and depth reporting via [`Mosdepth`](https://github.com/brentp/mosdepth).
+4. **Metagenomic Assembly & Classification**:
+   - De novo long-read metagenome assembly with [`metaFlye`](https://github.com/fenderglass/Flye).
+   - Plasmid and viral sequence identification via [`geNomad`](https://github.com/apcamargo/genomad).
+5. **Binning, QC & Taxonomy**:
+   - Read mapping to contigs with [`Minimap2`](https://github.com/lh3/minimap2) and depth calculation with [`MetaBAT2 (jgi_summarize_bam_contig_depths)`](https://bitbucket.org/berkeleylab/metabat).
+   - Metagenomic binning with [`MetaBAT2`](https://bitbucket.org/berkeleylab/metabat) (or [`SemiBin2`](https://github.com/BigDataBiology/SemiBin)).
+   - MAG completeness & contamination estimation with [`CheckM2`](https://github.com/chklovski/CheckM2).
+   - Taxonomic classification with [`GTDB-Tk`](https://github.com/Ecogenomics/GTDBTk).
+6. **Meta-epigenomics & Functional Annotation**:
+   - Native methylation pileup generation with [`Modkit`](https://github.com/nanoporetech/modkit).
+   - Methylation motif discovery and plasmid-to-host bin linkage with [`Nanomotif`](https://github.com/nanoporetech/nanomotif).
+   - Antimicrobial resistance detection with [`AMRFinderPlus`](https://github.com/ncbi/amr).
+   - Virulence factor screening with [`ABRICATE (VFDB)`](https://github.com/tseemann/abricate).
+   - Plasmid replicon typing with [`PlasmidFinder`](https://bitbucket.org/genomicepidemiology/plasmidfinder).
+   - MAG functional annotation with [`Bakta`](https://github.com/oschwengers/bakta).
+7. **Reporting & Audit Trail**:
+   - Standardized clinical audit-trail manifest (`*_run_manifest.json`) and clinical summary table (`*_clinical_report.tsv`).
+   - Summary report with [`MultiQC`](http://multiqc.info/).
 
 ## Usage
 
 > [!NOTE]
-> If you are new to Nextflow and nf-core, please refer to [this page](https://nf-co.re/docs/get_started/environment_setup/overview) on how to set-up Nextflow. Make sure to [test your setup](https://nf-co.re/docs/get_started/run-your-first-pipeline) with `-profile test` before running the workflow on actual data.
+> If you are new to Nextflow and nf-core, please refer to [this page](https://nf-co.re/docs/get_started/environment_setup/overview) on how to set-up Nextflow.
 
-<!-- TODO nf-core: Describe the minimum required steps to execute the pipeline, e.g. how to prepare samplesheets.
-     Explain what rows and columns represent. For instance (please edit as appropriate):
-
-First, prepare a samplesheet with your input data that looks as follows:
+Prepare a samplesheet with your input data (BAM or gzipped FASTQ):
 
 `samplesheet.csv`:
 
 ```csv
 sample,fastq_1,fastq_2
-CONTROL_REP1,AEG588A1_S1_L002_R1_001.fastq.gz,AEG588A1_S1_L002_R2_001.fastq.gz
+SAMPLE1,/path/to/sample1.fastq.gz,
+SAMPLE2,/path/to/sample2.fastq.gz,
 ```
 
-Each row represents a fastq file (single-end) or a pair of fastq files (paired end).
-
--->
-
-Now, you can run the pipeline using:
-
-<!-- TODO nf-core: update the following command to include all required parameters for a minimal example -->
+Launch the pipeline:
 
 ```bash
 nextflow run nf-core/nanometaepigenomics \
-   -profile <docker/singularity/.../institute> \
+   -profile <docker/singularity/conda> \
    --input samplesheet.csv \
-   --outdir <OUTDIR>
+   --human_fasta /path/to/GRCh38.fa \
+   --host_fasta /path/to/food_host.fa \
+   --outdir results/
 ```
 
 > [!WARNING]
 > Please provide pipeline parameters via the CLI or Nextflow `-params-file` option. Custom config files including those provided by the `-c` Nextflow option can be used to provide any configuration _**except for parameters**_; see [docs](https://nf-co.re/docs/running/run-pipelines#using-parameter-files).
 
-For more details and further functionality, please refer to the [usage documentation](https://nf-co.re/nanometaepigenomics/usage) and the [parameter documentation](https://nf-co.re/nanometaepigenomics/parameters).
+For more details and further functionality, please refer to the [usage documentation](docs/usage.md) and the [output documentation](docs/output.md).
 
 ## Pipeline output
 
