@@ -15,15 +15,11 @@
             },
             "fastq_1": {
                 "type": "string",
-                "format": "file-path",
-                "exists": true,
                 "pattern": "^([\\S\\s]*\\/)?[^\\s\\/]+(\\.(f(ast)?q\\.gz|bam|pod5))$",
                 "errorMessage": "Input read file 1 must be provided, cannot contain spaces and must have extension '.fq.gz', '.fastq.gz', '.bam', or '.pod5'"
             },
             "fastq_2": {
                 "type": "string",
-                "format": "file-path",
-                "exists": true,
                 "pattern": "^([\\S\\s]*\\/)?[^\\s\\/]+(\\.(f(ast)?q\\.gz|bam|pod5))$",
                 "errorMessage": "Input read file 2 cannot contain spaces and must have extension '.fq.gz', '.fastq.gz', '.bam', or '.pod5'"
             }
