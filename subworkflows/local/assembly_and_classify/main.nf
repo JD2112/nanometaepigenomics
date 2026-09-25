@@ -31,6 +31,8 @@ workflow ASSEMBLY_AND_CLASSIFY {
     emit:
     contigs     = ch_contigs
     assembly_gfa= FLYE.out.gfa
+    assembly_txt= FLYE.out.txt
+    assembly_log= FLYE.out.log
     plasmids    = ch_plasmids
     versions    = ch_versions
 }

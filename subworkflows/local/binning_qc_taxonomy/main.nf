@@ -54,13 +54,21 @@ workflow BINNING_QC_TAXONOMY {
     METABAT2_METABAT2 (
         ch_metabat_in
     )
-    ch_bins     = METABAT2_METABAT2.out.fasta
     ch_versions = ch_versions.mix(METABAT2_METABAT2.out.versions_metabat2)
+
+    // Fallback: If MetaBAT2 produces 0 bins (e.g. single isolate or unbinned contigs),
+    // fall back to using the assembly contigs so CheckM2 and GTDB-Tk run for every sample.
+    ch_bins_or_contigs = ch_contigs
+        .join(METABAT2_METABAT2.out.fasta, remainder: true)
+        .map { meta, contigs, bins ->
+            def bins_in = bins ?: [contigs]
+            [ meta, bins_in ]
+        }
 
     // 4. CheckM2 completeness & contamination prediction
     if (ch_checkm2_db) {
         CHECKM2_PREDICT (
-            ch_bins,
+            ch_bins_or_contigs,
             ch_checkm2_db
         )
         ch_checkm2  = CHECKM2_PREDICT.out.checkm2_tsv
@@ -70,16 +78,16 @@ workflow BINNING_QC_TAXONOMY {
     // 5. GTDB-Tk taxonomic classification
     if (ch_gtdb_db) {
         GTDBTK_CLASSIFYWF (
-            ch_bins.map { meta, bins -> [ meta, bins, [] ] },
-            [],
-            ch_gtdb_db
+            ch_bins_or_contigs,
+            ch_gtdb_db,
+            false
         )
         ch_gtdb     = GTDBTK_CLASSIFYWF.out.summary
         ch_versions = ch_versions.mix(GTDBTK_CLASSIFYWF.out.versions_gtdbtk)
     }
 
     emit:
-    bins        = ch_bins
+    bins        = METABAT2_METABAT2.out.fasta
     checkm2_tsv = ch_checkm2
     gtdb_tsv    = ch_gtdb
     sorted_bam  = SAMTOOLS_SORT.out.bam

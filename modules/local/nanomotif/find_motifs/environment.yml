@@ -3,4 +3,5 @@ channels:
   - conda-forge
   - bioconda
 dependencies:
-  - bioconda::nanomotif=0.4.13
+  - bioconda::nanomotif=1.1.2
+  - bioconda::htslib=1.21

@@ -1,3 +1,4 @@
 sample,fastq_1,fastq_2
-SAMPLE1_POD5,https://raw.githubusercontent.com/nf-core/test-datasets/nanoseq/fast5/barcode01.fast5.tar.gz,
-SAMPLE2_ONT_FASTQ,https://raw.githubusercontent.com/nf-core/test-datasets/nanoseq/fastq/sample1.fastq.gz,
+SAMPLE2_POD5,https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/homo_sapiens/nanopore/pod5/HG002_PAW70337_giab_10reads.pod5,
+KPNEU_ATCC700603,/data/Jyotirmoy/JD/nf-core-nanometaepigenomics/external_data/kpneun_atcc700603.pod5,
+STREP_DYSGALACTIAE,/data/Jyotirmoy/JD/nf-core-nanometaepigenomics/external_data/MMC234__202311/,

@@ -4,8 +4,8 @@ process DECONTAMINATION_FILTER_READS {
 
     conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine in ['singularity', 'apptainer'] && !task.ext.singularity_pull_docker_container ?
-        'community.wave.seqera.io/library/samtools:1.21--c7774cf768b4ef21' :
-        'community.wave.seqera.io/library/samtools:1.21--c7774cf768b4ef21' }"
+        'https://depot.galaxyproject.org/singularity/samtools:1.21--h50ea8bc_0' :
+        'quay.io/biocontainers/samtools:1.21--h50ea8bc_0' }"
 
     input:
     tuple val(meta), path(bam)

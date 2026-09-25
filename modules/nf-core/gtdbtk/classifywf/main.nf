@@ -4,8 +4,8 @@ process GTDBTK_CLASSIFYWF {
 
     conda "${moduleDir}/environment.yml"
     container "${workflow.containerEngine in ['singularity', 'apptainer'] && !task.ext.singularity_pull_docker_container
-        ? 'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/fa/fa734cc7e63b0f7d0c04788ec61de5e6a101a07e966d3dde24384d54a9d75e85/data'
-        : 'community.wave.seqera.io/library/gtdbtk:2.7.2--64b0fd171db01270'}"
+        ? 'https://depot.galaxyproject.org/singularity/gtdbtk:2.4.0--pyhdfd78af_1'
+        : 'quay.io/biocontainers/gtdbtk:2.4.0--pyhdfd78af_1'}"
 
     input:
     tuple val(meta)   , path("bins/*")
@@ -34,14 +34,48 @@ process GTDBTK_CLASSIFYWF {
     prefix              = task.ext.prefix ?: "${meta.id}"
     def pplacer_scratch = use_pplacer_scratch_dir ? "--scratch_dir pplacer_tmp" : ""
     """
-    export GTDBTK_DATA_PATH="\$(find -L ${db} -name 'metadata' -type d -exec dirname {} \\;)"
+    # Locate GTDBTK_DATA_PATH
+    if [ -d "${db}/metadata" ] || [ -d "${db}/skani" ] || [ -f "${db}/VERSION" ]; then
+        export GTDBTK_DATA_PATH="${db}"
+    else
+        RESOLVED_PATH=\$(find -L "${db}" -maxdepth 3 -name 'metadata' -type d -exec dirname {} \\; | head -n 1)
+        if [ -n "\$RESOLVED_PATH" ]; then
+            export GTDBTK_DATA_PATH="\$RESOLVED_PATH"
+        else
+            export GTDBTK_DATA_PATH="${db}"
+        fi
+    fi
+    echo "Using GTDBTK_DATA_PATH: \$GTDBTK_DATA_PATH"
 
     if [ "${pplacer_scratch}" != "" ] ; then
         mkdir pplacer_tmp
     fi
 
+    # Standardize genome extensions in bins/ so GTDB-Tk recognizes both bins and raw contigs
+    for f in bins/*.fasta.gz bins/*.fa.gz bins/*.fna.gz; do
+        [ -f "\$f" ] && mv "\$f" "\${f%.*.*}.fa.gz" 2>/dev/null || true
+    done
+    for f in bins/*.fasta bins/*.fna; do
+        [ -f "\$f" ] && mv "\$f" "\${f%.*}.fa" 2>/dev/null || true
+    done
+
+    # If all bins are compressed (.fa.gz), use --extension .fa.gz, otherwise .fa
+    EXT="fa"
+    if ls bins/*.fa.gz 1>/dev/null 2>&1; then
+        EXT="fa.gz"
+    fi
+
+    # In GTDB-Tk <= 2.4.0, classify_wf requires either --mash_db <file> or --skip_ani_screen
+    ANI_SCREEN_OPT="--skip_ani_screen"
+    MASH_FILE=\$(find -L "\$GTDBTK_DATA_PATH" -name "*.msh" 2>/dev/null | head -n 1)
+    if [ -n "\$MASH_FILE" ]; then
+        ANI_SCREEN_OPT="--mash_db \$MASH_FILE"
+    fi
+
     gtdbtk classify_wf \\
         ${args} \\
+        \${ANI_SCREEN_OPT} \\
+        --extension "\${EXT}" \\
         --genome_dir bins \\
         --prefix "${prefix}" \\
         --out_dir ${prefix} \\

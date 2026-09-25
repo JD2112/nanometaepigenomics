@@ -4,8 +4,8 @@ process MANIFEST_WRITER {
 
     conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine in ['singularity', 'apptainer'] && !task.ext.singularity_pull_docker_container ?
-        'community.wave.seqera.io/library/python:3.11--1a0957dcbb694119' :
-        'community.wave.seqera.io/library/python:3.11--1a0957dcbb694119' }"
+        'https://depot.galaxyproject.org/singularity/python:3.9--1' :
+        'quay.io/biocontainers/python:3.9--1' }"
 
     input:
     tuple val(meta), path(decontam_stats), path(checkm2_tsv), path(amr_tsv), path(motifs_tsv)

@@ -1,2 +1,2 @@
 sample,fastq_1,fastq_2
-test_sample,https://raw.githubusercontent.com/nf-core/test-datasets/nanoseq/fastq/sample1.fastq.gz,
+test_sample,https://raw.githubusercontent.com/nf-core/test-datasets/bacass/nanopore/subset2000.fq.gz,

@@ -20,15 +20,17 @@ workflow BASECALL_AND_CLEAN {
             val_dorado_model,
             val_dorado_modbase
         )
-        ch_bam      = DORADO_BASECALL.out.bam
-        ch_versions = ch_versions.mix(DORADO_BASECALL.out.versions_dorado)
+        ch_bam         = DORADO_BASECALL.out.bam
+        ch_reads_to_trim = DORADO_BASECALL.out.reads
+        ch_versions    = ch_versions.mix(DORADO_BASECALL.out.versions_dorado)
     } else {
-        ch_bam = ch_inputs
+        ch_bam         = ch_inputs
+        ch_reads_to_trim = ch_inputs
     }
 
     // Porechop adapter & chimera trimming
     PORECHOP_ABI (
-        ch_inputs,
+        ch_reads_to_trim,
         []
     )
     ch_versions = ch_versions.mix(PORECHOP_ABI.out.versions_porechop_abi)
@@ -41,7 +43,9 @@ workflow BASECALL_AND_CLEAN {
     ch_versions = ch_versions.mix(FILTLONG.out.versions_filtlong)
 
     emit:
-    reads    = ch_reads
-    bam      = ch_bam
-    versions = ch_versions
+    reads        = ch_reads
+    bam          = ch_bam
+    porechop_log = PORECHOP_ABI.out.log
+    filtlong_log = FILTLONG.out.log
+    versions     = ch_versions
 }

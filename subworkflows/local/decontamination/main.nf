@@ -73,5 +73,7 @@ workflow DECONTAMINATION {
     emit:
     clean_reads = ch_clean_reads
     stats       = ch_stats
+    mosdepth_global  = MOSDEPTH.out.global_txt
+    mosdepth_summary = MOSDEPTH.out.summary_txt
     versions    = ch_versions
 }

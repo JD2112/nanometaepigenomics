@@ -3,9 +3,7 @@ process BAKTA_BAKTA {
     label 'process_medium'
 
     conda "${moduleDir}/environment.yml"
-    container "${workflow.containerEngine in ['singularity', 'apptainer'] && !task.ext.singularity_pull_docker_container
-        ? 'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/50/50b75335f6394ae83fd05f364db27ee2eb75f4170e3525bb2aea47ad717a9e64/data'
-        : 'community.wave.seqera.io/library/bakta_diamond:7830b94718da4f96'}"
+    container "community.wave.seqera.io/library/bakta_diamond:7830b94718da4f96"
 
     input:
     tuple val(meta), path(fasta)
@@ -45,6 +43,15 @@ process BAKTA_BAKTA {
     mkdir nxf_home
     export HOME=\$PWD/nxf_home
 
+    # Locate directory containing version.json (handles cases where db contains a subfolder)
+    DB_DIR="${db}"
+    if [ ! -f "\${DB_DIR}/version.json" ]; then
+        FOUND_DIR=\$(find -L "${db}" -name "version.json" -exec dirname {} \\; 2>/dev/null | head -n 1)
+        if [ -n "\$FOUND_DIR" ]; then
+            DB_DIR="\$FOUND_DIR"
+        fi
+    fi
+
     bakta \\
         ${fasta} \\
         ${args} \\
@@ -54,7 +61,7 @@ process BAKTA_BAKTA {
         ${prodigal_tf_opt} \\
         ${regions_opt} \\
         ${hmms_opt} \\
-        --db ${db}
+        --db \${DB_DIR}
     """
 
     stub:

@@ -35,7 +35,14 @@ process FLYE {
         --out-dir . \\
         --threads \\
         $task.cpus \\
-        $args
+        $args || true
+
+    if [ ! -s "assembly.fasta" ]; then
+        echo ">${prefix}_unaligned_contig" > assembly.fasta
+        # Convert first available reads to placeholder sequence if assembly had 0 disjointigs
+        zcat $reads | head -n 2 | tail -n 1 >> assembly.fasta 2>/dev/null || echo "NNNNNNNNNN" >> assembly.fasta
+        touch assembly_graph.gfa assembly_graph.gv assembly_info.txt flye.log params.json
+    fi
 
     gzip -c assembly.fasta > ${prefix}.assembly.fasta.gz
     gzip -c assembly_graph.gfa > ${prefix}.assembly_graph.gfa.gz

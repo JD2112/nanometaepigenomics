@@ -51,10 +51,27 @@
                     "description": "Dorado basecalling model name.",
                     "default": "dna_r10.4.1_e8.2_400bps_sup@v4.3.0"
                 },
+                "download_dbs": {
+                    "type": "boolean",
+                    "description": "Automatically download reference genomes (GRCh38, Host) and databases (CheckM2, AMRFinderPlus, geNomad, Bakta) if not provided locally.",
+                    "default": false
+                },
+                "db_cache_dir": {
+                    "type": "string",
+                    "description": "Directory to cache downloaded reference databases."
+                },
+                "host": {
+                    "type": "string",
+                    "description": "Curated host preset name (e.g. bos_taurus, sus_scrofa, gallus_gallus) to automatically download and decontaminate."
+                },
+                "dorado_modified_bases": {
+                    "type": "string",
+                    "description": "Dorado modified base calling model (alias for dorado_modbase, e.g. 4mC_5mC,6mA)."
+                },
                 "dorado_modbase": {
                     "type": "string",
-                    "description": "Dorado modified base calling model (e.g. 5mCG_5hmCG or 5mC_5hmC).",
-                    "default": "5mCG_5hmCG"
+                    "description": "Dorado modified base calling model (e.g. 4mC_5mC,6mA or 5mCG_5hmCG).",
+                    "default": "4mC_5mC,6mA"
                 },
                 "flye_mode": {
                     "type": "string",

@@ -5,9 +5,9 @@
   </picture>
 </h1>
 
-[![Open in GitHub Codespaces](https://img.shields.io/badge/Open_In_GitHub_Codespaces-black?labelColor=grey&logo=github)](https://github.com/codespaces/new/nf-core/nanometaepigenomics)
-[![GitHub Actions CI Status](https://github.com/nf-core/nanometaepigenomics/actions/workflows/nf-test.yml/badge.svg)](https://github.com/nf-core/nanometaepigenomics/actions/workflows/nf-test.yml)
-[![GitHub Actions Linting Status](https://github.com/nf-core/nanometaepigenomics/actions/workflows/linting.yml/badge.svg)](https://github.com/nf-core/nanometaepigenomics/actions/workflows/linting.yml)[![AWS CI](https://img.shields.io/badge/CI%20tests-full%20size-FF9900?labelColor=000000&logo=Amazon%20AWS)](https://nf-co.re/nanometaepigenomics/results)[![Cite with Zenodo](http://img.shields.io/badge/DOI-10.5281/zenodo.XXXXXXX-1073c8?labelColor=000000)](https://doi.org/10.5281/zenodo.XXXXXXX)
+[![Open in GitHub Codespaces](https://img.shields.io/badge/Open_In_GitHub_Codespaces-black?labelColor=grey&logo=github)](https://github.com/codespaces/new/JD2112/nanometaepigenomics)
+[![GitHub Actions CI Status](https://github.com/JD2112/nanometaepigenomics/actions/workflows/nf-test.yml/badge.svg)](https://github.com/JD2112/nanometaepigenomics/actions/workflows/nf-test.yml)
+[![GitHub Actions Linting Status](https://github.com/JD2112/nanometaepigenomics/actions/workflows/linting.yml/badge.svg)](https://github.com/JD2112/nanometaepigenomics/actions/workflows/linting.yml)
 [![nf-test](https://img.shields.io/badge/unit_tests-nf--test-337ab7.svg)](https://www.nf-test.com)
 
 [![Nextflow](https://img.shields.io/badge/version-%E2%89%A525.10.4-green?style=flat&logo=nextflow&logoColor=white&color=%230DC09D&link=https%3A%2F%2Fnextflow.io)](https://www.nextflow.io/)
@@ -15,13 +15,17 @@
 [![run with conda](http://img.shields.io/badge/run%20with-conda-3EB049?labelColor=000000&logo=anaconda)](https://docs.conda.io/en/latest/)
 [![run with docker](https://img.shields.io/badge/run%20with-docker-0db7ed?labelColor=000000&logo=docker)](https://www.docker.com/)
 [![run with singularity](https://img.shields.io/badge/run%20with-singularity-1d355c.svg?labelColor=000000)](https://sylabs.io/docs/)
-[![Launch on Seqera Platform](https://img.shields.io/badge/Launch%20%F0%9F%9A%80-Seqera%20Platform-%234256e7)](https://cloud.seqera.io/launch?pipeline=https://github.com/nf-core/nanometaepigenomics)
+[![Launch on Seqera Platform](https://img.shields.io/badge/Launch%20%F0%9F%9A%80-Seqera%20Platform-%234256e7)](https://cloud.seqera.io/launch?pipeline=https://github.com/JD2112/nanometaepigenomics)
 
-[![Get help on Slack](http://img.shields.io/badge/slack-nf--core%20%23nanometaepigenomics-4A154B?labelColor=000000&logo=slack)](https://nfcore.slack.com/channels/nanometaepigenomics)[![Follow on Bluesky](https://img.shields.io/badge/bluesky-%40nf__core-1185fe?labelColor=000000&logo=bluesky)](https://bsky.app/profile/nf-co.re)[![Follow on Mastodon](https://img.shields.io/badge/mastodon-nf__core-6364ff?labelColor=FFFFFF&logo=mastodon)](https://mstdn.science/@nf_core)[![Watch on YouTube](http://img.shields.io/badge/youtube-nf--core-FF0000?labelColor=000000&logo=youtube)](https://www.youtube.com/c/nf-core)
+[![Get help on Slack](http://img.shields.io/badge/slack-nf--core-4A154B?labelColor=000000&logo=slack)](https://nf-co.re/join)[![Follow on Bluesky](https://img.shields.io/badge/bluesky-%40nf__core-1185fe?labelColor=000000&logo=bluesky)](https://bsky.app/profile/nf-co.re)[![Follow on Mastodon](https://img.shields.io/badge/mastodon-nf__core-6364ff?labelColor=FFFFFF&logo=mastodon)](https://mstdn.science/@nf_core)[![Watch on YouTube](http://img.shields.io/badge/youtube-nf--core-FF0000?labelColor=000000&logo=youtube)](https://www.youtube.com/c/nf-core)
+
+> [!NOTE]
+> **nf-core Candidate Pipeline:** This pipeline is developed according to nf-core DSL2 standards and guidelines, and is being prepared for submission to the [nf-core](https://nf-co.re) community.
+> Repository development URL: [https://github.com/JD2112/nanometaepigenomics](https://github.com/JD2112/nanometaepigenomics)
 
 ## Introduction
 
-**nf-core/nanometaepigenomics** is a clinical-grade, reproducible bioinformatics pipeline designed for Oxford Nanopore Technologies (ONT) metagenomic sequencing. It couples high-accuracy long-read assembly and metagenome-assembled genome (MAG) recovery with native bacterial epigenetic profiling (5mC/5hmC methylation calling and motif identification).
+**nanometaepigenomics** (candidate: `nf-core/nanometaepigenomics`) is a clinical-grade, reproducible bioinformatics pipeline designed for Oxford Nanopore Technologies (ONT) metagenomic sequencing. It couples high-accuracy long-read assembly and metagenome-assembled genome (MAG) recovery with native bacterial epigenetic profiling (5mC/5hmC methylation calling and motif identification).
 
 The pipeline is optimized for food safety, agricultural, and clinical pathogen surveillance where understanding bacterial strain diversity, mobile genetic elements (plasmids/phages), antimicrobial resistance (AMR), and host-contaminant depletion is critical.
 
@@ -74,7 +78,7 @@ SAMPLE2,/path/to/sample2.fastq.gz,
 Launch the pipeline:
 
 ```bash
-nextflow run nf-core/nanometaepigenomics \
+nextflow run JD2112/nanometaepigenomics \
    -profile <docker/singularity/conda> \
    --input samplesheet.csv \
    --human_fasta /path/to/GRCh38.fa \

@@ -29,9 +29,14 @@ workflow METAEPIGENOMICS_ANNOTATION {
     ch_versions = ch_versions.mix(MODKIT_PILEUP.out.versions_modkit)
 
     // 2. Nanomotif motif discovery & bin/plasmid linkage
+    // Join with remainder: true so that if MetaBAT2 produces 0 bins, the pipeline falls back gracefully
     ch_nanomotif_in = ch_contigs
         .join(MODKIT_PILEUP.out.bedgz)
-        .join(ch_bins)
+        .join(ch_bins, remainder: true)
+        .map { meta, contigs, bedgz, bins ->
+            def bins_in = bins ?: []
+            [ meta, contigs, bedgz, bins_in ]
+        }
 
     NANOMOTIF_FIND_MOTIFS (
         ch_nanomotif_in
@@ -43,7 +48,7 @@ workflow METAEPIGENOMICS_ANNOTATION {
     if (ch_amr_db) {
         AMRFINDERPLUS_RUN (
             ch_contigs,
-            ch_amr_db
+            ch_amr_db.map { _meta, db -> db }
         )
         ch_amr      = AMRFINDERPLUS_RUN.out.report
         ch_versions = ch_versions.mix(AMRFINDERPLUS_RUN.out.versions_amrfinderplus)
@@ -68,7 +73,7 @@ workflow METAEPIGENOMICS_ANNOTATION {
     if (ch_bakta_db) {
         BAKTA_BAKTA (
             ch_contigs,
-            ch_bakta_db,
+            ch_bakta_db.map { _meta, db -> db },
             [],
             [],
             [],

@@ -3,9 +3,9 @@ process GENOMAD_ENDTOEND {
     label 'process_high'
 
     conda "${moduleDir}/environment.yml"
-    container "${workflow.containerEngine in ['singularity', 'apptainer'] && !task.ext.singularity_pull_docker_container
-        ? 'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/83/83e31b082e82e714b01040adf90f865fdd229b6d9d926525b821d207271a3922/data'
-        : 'community.wave.seqera.io/library/genomad:1.12.0--27836e6e665e84b5'}"
+    container "${ workflow.containerEngine in ['singularity', 'apptainer'] && !task.ext.singularity_pull_docker_container ?
+        'https://depot.galaxyproject.org/singularity/genomad:1.8.1--pyhdfd78af_0' :
+        'quay.io/biocontainers/genomad:1.8.1--pyhdfd78af_0' }"
 
     input:
     tuple val(meta), path(fasta)
