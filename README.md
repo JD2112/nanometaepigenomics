@@ -21,42 +21,55 @@
 
 ## Introduction
 
-**nf-core/nanometaepigenomics** is a bioinformatics pipeline that ...
+**nf-core/nanometaepigenomics** is a clinical-grade, end-to-end bioinformatics pipeline designed for Oxford Nanopore Technologies (ONT) long-read metagenomic sequencing. It couples high-accuracy long-read metagenomic de novo assembly and Metagenome-Assembled Genome (MAG) recovery with native bacterial epigenetic profiling (5mC/5hmC/6mA methylation calling and motif identification). Crucially, the pipeline leverages `Nanomotif` to link unbinned mobile genetic elements (plasmids and phages identified by `geNomad`) back to host bacterial MAGs via shared restriction-modification methylation motifs.
 
-<!-- TODO nf-core:
-   Complete this sentence with a 2-3 sentence summary of what types of data the pipeline ingests, a brief overview of the
-   major pipeline sections and the types of output it produces. You're giving an overview to someone new
-   to nf-core here, in 15-20 seconds. For an example, see https://github.com/nf-core/rnaseq/blob/master/README.md#introduction
--->
+![nf-core/nanometaepigenomics workflow](docs/images/nanometaepigenomics_workflow.png)
 
-<!-- TODO nf-core: Include a figure that guides the user through the major workflow steps. Many nf-core
-     workflows use the "tube map" design for that. See https://nf-co.re/docs/community/brand/workflow-schematics#examples for examples.   -->
-<!-- TODO nf-core: Fill in short bullet-pointed list of the default steps in the pipeline -->1. Read QC ([`FastQC`](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/))2. Present QC for raw reads ([`MultiQC`](http://multiqc.info/))
+### Pipeline Steps Overview
+
+1. **Raw Read QC & Basecalling**:
+   - Sequencing read QC ([`NanoPlot`](https://github.com/wdecoster/NanoPlot)).
+   - GPU-accelerated basecalling and modified basecalling with MM/ML tags ([`Dorado`](https://github.com/nanoporetech/dorado)).
+   - Adapter trimming ([`Porechop_ABI`](https://github.com/bonsai-team/Porechop_ABI)) and length/quality filtering ([`Filtlong`](https://github.com/rrwick/Filtlong)).
+2. **2-Stage Host Decontamination**:
+   - Stage 1: Human GRCh38 privacy screening and depletion ([`Minimap2`](https://github.com/lh3/minimap2) + [`Samtools`](http://www.htslib.org/)).
+   - Stage 2: Background food matrix / declared host depletion ([`Minimap2`](https://github.com/lh3/minimap2) + [`Mosdepth`](https://github.com/brentp/mosdepth)).
+3. **De Novo Assembly & MGE Prediction**:
+   - Long-read metagenome assembly ([`metaFlye`](https://github.com/fenderglass/Flye)).
+   - Plasmid and viral element identification ([`geNomad`](https://github.com/apcamargo/genomad)).
+4. **Binning & MAG Profiling**:
+   - Metagenomic binning ([`MetaBAT2`](https://bitbucket.org/berkeleylab/metabat/src/master/)).
+   - MAG quality and completeness assessment ([`CheckM2`](https://github.com/chklovski/CheckM2)).
+   - Taxonomic classification ([`GTDB-Tk`](https://github.com/Ecogenomics/GTDBTk)).
+5. **Epigenomics & Plasmid-Host Linkage**:
+   - Modification pileup generation ([`Modkit`](https://github.com/nanoporetech/modkit)).
+   - De novo bacterial methylation motif discovery and plasmid-to-host genome association ([`Nanomotif`](https://github.com/philshanc/nanomotif)).
+6. **Surveillance & Functional Annotation**:
+   - Antimicrobial resistance profiling ([`AMRFinderPlus`](https://github.com/ncbi/amr)).
+   - Virulence factor screening ([`ABRICATE`](https://github.com/tseemann/abricate) with VFDB) and plasmid replicon typing ([`PlasmidFinder`](https://bitbucket.org/genomicepidemiology/plasmidfinder/src/master/)).
+   - Rapid prokaryotic genome functional annotation ([`Bakta`](https://github.com/oschwengers/bakta)).
+7. **Quality Control & Reporting**:
+   - Audit manifest generation (`*_run_manifest.json`) and clinical summary table (`*_clinical_report.tsv`).
+   - Aggregate quality reports across all tools ([`MultiQC`](http://multiqc.info/)).
 
 ## Usage
 
 > [!NOTE]
 > If you are new to Nextflow and nf-core, please refer to [this page](https://nf-co.re/docs/get_started/environment_setup/overview) on how to set-up Nextflow. Make sure to [test your setup](https://nf-co.re/docs/get_started/run-your-first-pipeline) with `-profile test` before running the workflow on actual data.
 
-<!-- TODO nf-core: Describe the minimum required steps to execute the pipeline, e.g. how to prepare samplesheets.
-     Explain what rows and columns represent. For instance (please edit as appropriate):
-
 First, prepare a samplesheet with your input data that looks as follows:
 
 `samplesheet.csv`:
 
 ```csv
-sample,fastq_1,fastq_2
-CONTROL_REP1,AEG588A1_S1_L002_R1_001.fastq.gz,AEG588A1_S1_L002_R2_001.fastq.gz
+sample,fastq_1
+SAMPLE_1,/path/to/reads/SAMPLE_1.fastq.gz
+SAMPLE_2,/path/to/reads/SAMPLE_2.fastq.gz
 ```
 
-Each row represents a fastq file (single-end) or a pair of fastq files (paired end).
-
--->
+Each row represents an ONT run with long reads (gzipped FASTQ). If starting directly from Oxford Nanopore raw signal data (`.pod5`), you can point the pipeline to your POD5 folder via `--pod5_dir`.
 
 Now, you can run the pipeline using:
-
-<!-- TODO nf-core: update the following command to include all required parameters for a minimal example -->
 
 ```bash
 nextflow run nf-core/nanometaepigenomics \
@@ -78,11 +91,7 @@ For more details about the output files and reports, please refer to the
 
 ## Credits
 
-nf-core/nanometaepigenomics was originally written by Jyotirmoy Das.
-
-We thank the following people for their extensive assistance in the development of this pipeline:
-
-<!-- TODO nf-core: If applicable, make list of people who have also contributed -->
+nf-core/nanometaepigenomics was originally written by Jyotirmoy Das ([@JD2112](https://github.com/JD2112)).
 
 ## Contributions and Support
 
@@ -91,11 +100,6 @@ If you would like to contribute to this pipeline, please see the [contributing g
 For further information or help, don't hesitate to get in touch on the [Slack `#nanometaepigenomics` channel](https://nfcore.slack.com/channels/nanometaepigenomics) (you can join with [this invite](https://nf-co.re/join/slack)).
 
 ## Citations
-
-<!-- TODO nf-core: Add citation for pipeline after first release. Uncomment lines below and update Zenodo doi and badge at the top of this file. -->
-<!-- If you use nf-core/nanometaepigenomics for your analysis, please cite it using the following doi: [10.5281/zenodo.XXXXXX](https://doi.org/10.5281/zenodo.XXXXXX) -->
-
-<!-- TODO nf-core: Add bibliography of tools and data used in your pipeline -->
 
 An extensive list of references for the tools used by the pipeline can be found in the [`CITATIONS.md`](CITATIONS.md) file.
 
