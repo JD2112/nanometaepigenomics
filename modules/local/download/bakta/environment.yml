@@ -1,0 +1,6 @@
+name: download_bakta_db
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  - bioconda::bakta=1.10.4

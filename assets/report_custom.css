@@ -1,0 +1,154 @@
+/* Custom clinical & epigenomic report styling for nanometaepigenomics HTML reports */
+:root {
+  --nano-slate: #1E293B;
+  --nano-teal: #0D9488;
+  --nano-cyan: #0284C7;
+  --nano-indigo: #4F46E5;
+  --nano-emerald: #059669;
+  --nano-amber: #D97706;
+  --nano-rose: #E11D48;
+  --nano-light: #F8FAFC;
+  --nano-border: #CBD5E1;
+  --nano-card-bg: #FFFFFF;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  color: #334155;
+  background-color: #F8FAFC;
+  line-height: 1.6;
+}
+
+h1, h2, h3, h4 {
+  font-weight: 700;
+  color: var(--nano-slate);
+}
+
+h1 {
+  border-bottom: 2px solid var(--nano-teal);
+  padding-bottom: 8px;
+  margin-top: 1.8rem;
+  margin-bottom: 1.2rem;
+  font-size: 1.85rem;
+}
+
+h2 {
+  color: var(--nano-teal);
+  font-size: 1.35rem;
+  margin-top: 1.6rem;
+  margin-bottom: 0.9rem;
+}
+
+h3 {
+  font-size: 1.15rem;
+  color: var(--nano-slate);
+  margin-top: 1.2rem;
+}
+
+/* Card Boxes */
+.report-card {
+  background-color: var(--nano-card-bg);
+  border: 1px solid var(--nano-border);
+  border-left: 5px solid var(--nano-teal);
+  border-radius: 8px;
+  padding: 18px 22px;
+  margin-top: 14px;
+  margin-bottom: 22px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.kpi-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.kpi-card {
+  background-color: var(--nano-card-bg);
+  border: 1px solid var(--nano-border);
+  border-radius: 8px;
+  padding: 16px;
+  text-align: center;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.kpi-title {
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #64748B;
+  margin-bottom: 6px;
+}
+
+.kpi-value {
+  font-size: 1.7rem;
+  font-weight: 700;
+  color: var(--nano-teal);
+}
+
+.metadata-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+  background-color: var(--nano-card-bg);
+  border: 1px solid var(--nano-border);
+  border-radius: 8px;
+  padding: 18px 22px;
+  margin-bottom: 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.metadata-item {
+  font-size: 0.95rem;
+  margin-bottom: 6px;
+  color: #475569;
+}
+
+.metadata-item strong {
+  color: var(--nano-slate);
+}
+
+/* Table styling */
+.dataTables_wrapper table.dataTable thead th,
+.table thead th {
+  background-color: var(--nano-teal) !important;
+  color: #FFFFFF !important;
+  font-weight: 600 !important;
+  border-bottom: 2px solid #0F766E !important;
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+  background-color: rgba(13, 148, 136, 0.04);
+}
+
+.badge-res {
+  display: inline-block;
+  padding: 3px 8px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  border-radius: 4px;
+  background-color: #FEE2E2;
+  color: #991B1B;
+}
+
+.badge-vir {
+  display: inline-block;
+  padding: 3px 8px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  border-radius: 4px;
+  background-color: #FEF3C7;
+  color: #92400E;
+}
+
+.badge-pass {
+  display: inline-block;
+  padding: 3px 8px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  border-radius: 4px;
+  background-color: #DCFCE7;
+  color: #166534;
+}

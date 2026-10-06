@@ -1,0 +1,277 @@
+---
+title: ""
+format:
+  html:
+    title-block-style: none
+    toc: true
+    toc-depth: 3
+    toc-expand: 2
+    theme: flatly
+    embed-resources: true
+    page-layout: full
+    code-fold: true
+    number-sections: true
+    number-depth: 3
+    css: report_custom.css
+  pdf:
+    pdf-engine: pdflatex
+    documentclass: article
+    toc: false
+    number-sections: true
+    number-depth: 3
+    colorlinks: true
+    geometry:
+      - top=16mm
+      - left=18mm
+      - right=18mm
+      - bottom=18mm
+      - footskip=8mm
+    include-in-header:
+      text: |
+        \usepackage[T1]{fontenc}
+        \usepackage[utf8]{inputenc}
+        \usepackage[scaled=0.92]{helvet}
+        \renewcommand{\familydefault}{\sfdefault}
+        \usepackage{fancyhdr}
+        \usepackage{booktabs}
+        \usepackage[skins,breakable]{tcolorbox}
+        \usepackage{colortbl}
+        \usepackage{xcolor}
+        \usepackage{sectsty}
+        \setlength{\tabcolsep}{8pt}
+        \renewcommand{\arraystretch}{1.2}
+        \definecolor{nanoslate}{HTML}{1E293B}
+        \definecolor{nanoteal}{HTML}{0D9488}
+        \definecolor{nanolight}{HTML}{F8FAFC}
+        \sectionfont{\color{nanoslate}\Large\bfseries}
+        \subsectionfont{\color{nanoteal}\large\bfseries}
+        \pagestyle{fancy}
+        \fancyhf{}
+        \fancyhead[L]{\small\color{nanoslate}\textbf{nanometaepigenomics Clinical Analytical Report}}
+        \fancyfoot[R]{\small\color{gray}\textbf{Page \thepage}}
+        \newtcolorbox{reportcard}{colback=nanolight,colframe=nanoteal,boxrule=1.2pt,arc=2mm,left=8pt,right=8pt,top=6pt,bottom=6pt}
+execute:
+  echo: false
+  warning: false
+  message: false
+params:
+  manifest_json: "test_sample_run_manifest.json"
+  checkm2_tsv: "checkm2_report.tsv"
+  amr_tsv: "amr_report.tsv"
+  virulence_tsv: "virulence_report.tsv"
+  motifs_tsv: "motifs.tsv"
+  gtdb_tsv: "gtdbtk_summary.tsv"
+  decontam_tsv: "decontam_stats.tsv"
+  software_versions_yaml: "software_versions.yml"
+---
+
+```{r setup}
+library(jsonlite)
+library(knitr)
+library(kableExtra)
+
+read_tsv_safe <- function(path) {
+  if (!is.null(path) && file.exists(path) && file.info(path)$size > 0) {
+    tryCatch({
+      read.delim(path, sep = "\t", stringsAsFactors = FALSE, check.names = FALSE)
+    }, error = function(e) data.frame())
+  } else {
+    data.frame()
+  }
+}
+
+manifest <- list()
+if (file.exists(params$manifest_json) && file.info(params$manifest_json)$size > 0) {
+  tryCatch({
+    manifest <- fromJSON(params$manifest_json)
+  }, error = function(e) list())
+}
+
+checkm2_df <- read_tsv_safe(params$checkm2_tsv)
+amr_df     <- read_tsv_safe(params$amr_tsv)
+vir_df     <- read_tsv_safe(params$virulence_tsv)
+motifs_df  <- read_tsv_safe(params$motifs_tsv)
+gtdb_df    <- read_tsv_safe(params$gtdb_tsv)
+decont_df  <- read_tsv_safe(params$decontam_tsv)
+
+sample_id <- if (!is.null(manifest$sample_id)) manifest$sample_id else "Sample"
+pipeline_ver <- if (!is.null(manifest$version)) manifest$version else "1.0.0dev"
+analysis_date <- as.character(Sys.Date())
+
+kable_styled <- function(df, caption = "", note = NULL) {
+  if (nrow(df) == 0) return(cat("*(No records detected)*\n\n"))
+  if (knitr::is_html_output()) {
+    kb <- kable(df, format = "html", caption = caption)
+    kb <- kable_styling(kb, full_width = TRUE, bootstrap_options = c("striped", "hover", "condensed"))
+    if (!is.null(note)) kb <- footnote(kb, general = note, general_title = "Note: ")
+    return(kb)
+  } else {
+    colnames(df) <- gsub("_", " ", colnames(df))
+    colnames(df) <- gsub("%", "\\\\%", colnames(df))
+    char_cols <- sapply(df, is.character)
+    if (any(char_cols)) {
+      df[char_cols] <- lapply(df[char_cols], function(x) gsub("_", "\\\\_", x))
+    }
+    kb <- kable(df, format = "latex", escape = FALSE, caption = caption, booktabs = TRUE, row.names = FALSE)
+    kb <- kable_styling(kb, full_width = FALSE, latex_options = c("striped", "HOLD_position"), font_size = 9)
+    kb <- row_spec(kb, 0, bold = TRUE, color = "white", background = "#0D9488")
+    return(kb)
+  }
+}
+```
+
+```{r header-box, results='asis'}
+if (knitr::is_html_output()) {
+  cat('```{=html}\n')
+  cat('<div class="report-header-banner">\n')
+  cat('  <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 3px solid #0D9488; padding-bottom: 12px; margin-bottom: 20px;">\n')
+  cat('    <div>\n')
+  cat('      <h2 style="margin: 0; color: #1E293B; font-weight: 800;">Nanopore Metagenomic & Epigenomic Profiling Report</h2>\n')
+  cat('      <div style="color: #0D9488; font-size: 1.05rem; font-weight: 600;">nf-core/nanometaepigenomics Clinical & Matrix Analytical Summary</div>\n')
+  cat('    </div>\n')
+  cat('    <div style="text-align: right;">\n')
+  cat('      <span class="badge-pass" style="font-size: 0.95rem; padding: 6px 12px;">STATUS: COMPLETE</span>\n')
+  cat('    </div>\n')
+  cat('  </div>\n')
+  cat('  <div class="metadata-grid">\n')
+  cat('    <div>\n')
+  cat('      <div class="metadata-item"><strong>Sample Identifier:</strong> ', sample_id, '</div>\n')
+  cat('      <div class="metadata-item"><strong>Pipeline Version:</strong> ', pipeline_ver, '</div>\n')
+  cat('      <div class="metadata-item"><strong>Execution Timestamp:</strong> ', analysis_date, '</div>\n')
+  cat('    </div>\n')
+  cat('    <div>\n')
+  cat('      <div class="metadata-item"><strong>Modality:</strong> ONT Long-Read Metagenomics</div>\n')
+  cat('      <div class="metadata-item"><strong>Epigenomic Signals:</strong> 5mC / 6mA Base Modifications</div>\n')
+  cat('      <div class="metadata-item"><strong>Analysis Mode:</strong> Clinical / Food Traceability</div>\n')
+  cat('    </div>\n')
+  cat('  </div>\n')
+  cat('</div>\n')
+  cat('```\n')
+} else {
+  s_id_esc <- gsub("_", "\\\\_", sample_id)
+  p_ver_esc <- gsub("_", "\\\\_", pipeline_ver)
+  cat('\\begin{reportcard}\n')
+  cat('\\textbf{Sample ID:} ', s_id_esc, ' \\hfill \\textbf{Date:} ', analysis_date, ' \\\\\n')
+  cat('\\textbf{Pipeline:} nf-core/nanometaepigenomics v', p_ver_esc, ' \\hfill \\textbf{Status:} COMPLETE \\\\\n')
+  cat('\\textbf{Modality:} ONT Long-Read Metagenomics \\hfill \\textbf{Signals:} 5mC / 6mA Base Modifications\n')
+  cat('\\end{reportcard}\n\n')
+}
+```
+
+# Executive Summary
+
+```{r kpis, results='asis'}
+n_mags <- nrow(checkm2_df)
+n_amr  <- nrow(amr_df)
+n_vir  <- nrow(vir_df)
+n_motifs <- nrow(motifs_df)
+
+if (knitr::is_html_output()) {
+  cat('<div class="kpi-container">\n')
+  cat('  <div class="kpi-card">\n')
+  cat('    <div class="kpi-title">Assembled MAGs</div>\n')
+  cat('    <div class="kpi-value">', n_mags, '</div>\n')
+  cat('  </div>\n')
+  cat('  <div class="kpi-card">\n')
+  cat('    <div class="kpi-title">AMR Elements</div>\n')
+  cat('    <div class="kpi-value" style="color: #E11D48;">', n_amr, '</div>\n')
+  cat('  </div>\n')
+  cat('  <div class="kpi-card">\n')
+  cat('    <div class="kpi-title">Virulence Factors</div>\n')
+  cat('    <div class="kpi-value" style="color: #D97706;">', n_vir, '</div>\n')
+  cat('  </div>\n')
+  cat('  <div class="kpi-card">\n')
+  cat('    <div class="kpi-title">Discovered Motifs</div>\n')
+  cat('    <div class="kpi-value" style="color: #0284C7;">', n_motifs, '</div>\n')
+  cat('  </div>\n')
+  cat('</div>\n\n')
+} else {
+  cat('\\noindent\\textbf{Key Metrics Summary:}\\\\ \n')
+  cat('\\textbf{Assembled MAGs:} ', n_mags, ' | \\textbf{AMR Elements:} ', n_amr, ' | \\textbf{Virulence Factors:} ', n_vir, ' | \\textbf{Discovered Motifs:} ', n_motifs, '\\\\\n\n')
+}
+```
+
+::: {.report-card}
+**Overview & Pathogen Profiling Summary:**  
+This sample was sequenced with native Oxford Nanopore long reads and processed through **nf-core/nanometaepigenomics**. Raw signal basecalling and modification detection were evaluated, followed by human and host sequence decontamination, *de novo* metagenomic assembly with metaFlye, MAG binning with MetaBAT2, quality verification with CheckM2, methylation motif discovery with Nanomotif, and resistance/virulence detection using AMRFinderPlus and Abricate (VFDB).
+:::
+
+# Host Decontamination & Read Cleaning
+
+```{r decontam-table, results='asis'}
+if (nrow(decont_df) > 0) {
+  print(kable_styled(decont_df, caption = "Host Decontamination and Read Yields Across Filtering Stages"))
+} else {
+  cat("*(No host screening filtering logs were triggered or reference genomes specified)*\n\n")
+}
+```
+
+# Metagenomic Binning & MAG Quality (CheckM2 & GTDB-Tk)
+
+```{r checkm2-table, results='asis'}
+if (nrow(checkm2_df) > 0) {
+  # Display relevant columns
+  cols_keep <- intersect(c("Name", "Completeness", "Contamination", "Completeness_Model_Used"), colnames(checkm2_df))
+  sub_checkm2 <- if (length(cols_keep) > 0) checkm2_df[, cols_keep, drop = FALSE] else checkm2_df
+  print(kable_styled(sub_checkm2, caption = "CheckM2 Metagenomic Assembled Genome (MAG) Completeness & Contamination"))
+} else {
+  cat("*(No bins passed length/depth threshold for CheckM2 or database not supplied)*\n\n")
+}
+```
+
+```{r gtdb-table, results='asis'}
+if (nrow(gtdb_df) > 0) {
+  cols_gtdb <- intersect(c("user_genome", "classification", "fastani_reference", "closest_placement_reference"), colnames(gtdb_df))
+  sub_gtdb <- if (length(cols_gtdb) > 0) gtdb_df[, cols_gtdb, drop = FALSE] else gtdb_df
+  print(kable_styled(sub_gtdb, caption = "GTDB-Tk Taxonomic Classification"))
+} else {
+  cat("*(GTDB-Tk taxonomy classification not executed or database omitted)*\n\n")
+}
+```
+
+# Native Epigenomics & Discovered Methylation Motifs (Nanomotif)
+
+Epigenetic modifications (such as $N^6$-methyladenine ($6\text{mA}$) and $5$-methylcytosine ($5\text{mC}$)) provide native epigenetic fingerprints for microbial discrimination, phage defense systems (Restriction-Modification), and linking mobile plasmids to host bacterial chromosomes.
+
+```{r motifs-table, results='asis'}
+if (nrow(motifs_df) > 0) {
+  cols_motifs <- intersect(c("mod_type", "motif", "mod_position", "n_mod_bins", "score"), colnames(motifs_df))
+  sub_motifs <- if (length(cols_motifs) > 0) motifs_df[, cols_motifs, drop = FALSE] else motifs_df
+  print(kable_styled(sub_motifs, caption = "Identified Native DNA Methylation Motifs"))
+} else {
+  cat("*(No motifs detected at the significance threshold)*\n\n")
+}
+```
+
+# Antimicrobial Resistance (AMR) & Virulence Profile
+
+```{r amr-table, results='asis'}
+if (nrow(amr_df) > 0) {
+  cols_amr <- intersect(c("Contig id", "Gene symbol", "Sequence name", "Scope", "Element type", "Subclass"), colnames(amr_df))
+  sub_amr <- if (length(cols_amr) > 0) amr_df[, cols_amr, drop = FALSE] else amr_df
+  print(kable_styled(sub_amr, caption = "NCBI AMRFinderPlus Identified Resistance Determinants"))
+} else {
+  cat("*(No antimicrobial resistance genes identified in this sample)*\n\n")
+}
+```
+
+```{r vir-table, results='asis'}
+if (nrow(vir_df) > 0) {
+  cols_vir <- intersect(c("SEQUENCE", "GENE", "COVERAGE", "IDENTITY", "DATABASE", "ACCESSION", "PRODUCT"), colnames(vir_df))
+  sub_vir <- if (length(cols_vir) > 0) vir_df[, cols_vir, drop = FALSE] else vir_df
+  print(kable_styled(sub_vir, caption = "Abricate Virulence Factors (VFDB)"))
+} else {
+  cat("*(No virulence factors detected)*\n\n")
+}
+```
+
+# Provenance & Analytical Traceability
+
+```{r audit-trail, results='asis'}
+cat('<div class="report-card">\n')
+cat('<strong>Data Audit & Reproducibility Trace:</strong><br>\n')
+cat('All analysis stages were executed in containerized Singularity / Docker environments adhering to the nf-core pipeline standards.<br>\n')
+cat('Execution pipeline: <code>nf-core/nanometaepigenomics</code> (version: ', pipeline_ver, ')<br>\n')
+cat('Audit manifest JSON generated: <code>', params$manifest_json, '</code>\n')
+cat('</div>\n')
+```

@@ -5,9 +5,9 @@
   </picture>
 </h1>
 
-[![Open in GitHub Codespaces](https://img.shields.io/badge/Open_In_GitHub_Codespaces-black?labelColor=grey&logo=github)](https://github.com/codespaces/new/nf-core/nanometaepigenomics)
-[![GitHub Actions CI Status](https://github.com/nf-core/nanometaepigenomics/actions/workflows/nf-test.yml/badge.svg)](https://github.com/nf-core/nanometaepigenomics/actions/workflows/nf-test.yml)
-[![GitHub Actions Linting Status](https://github.com/nf-core/nanometaepigenomics/actions/workflows/linting.yml/badge.svg)](https://github.com/nf-core/nanometaepigenomics/actions/workflows/linting.yml)[![AWS CI](https://img.shields.io/badge/CI%20tests-full%20size-FF9900?labelColor=000000&logo=Amazon%20AWS)](https://nf-co.re/nanometaepigenomics/results)[![Cite with Zenodo](http://img.shields.io/badge/DOI-10.5281/zenodo.XXXXXXX-1073c8?labelColor=000000)](https://doi.org/10.5281/zenodo.XXXXXXX)
+[![Open in GitHub Codespaces](https://img.shields.io/badge/Open_In_GitHub_Codespaces-black?labelColor=grey&logo=github)](https://github.com/codespaces/new/JD2112/nanometaepigenomics)
+[![GitHub Actions CI Status](https://github.com/JD2112/nanometaepigenomics/actions/workflows/nf-test.yml/badge.svg)](https://github.com/JD2112/nanometaepigenomics/actions/workflows/nf-test.yml)
+[![GitHub Actions Linting Status](https://github.com/JD2112/nanometaepigenomics/actions/workflows/linting.yml/badge.svg)](https://github.com/JD2112/nanometaepigenomics/actions/workflows/linting.yml)
 [![nf-test](https://img.shields.io/badge/unit_tests-nf--test-337ab7.svg)](https://www.nf-test.com)
 
 [![Nextflow](https://img.shields.io/badge/version-%E2%89%A525.10.4-green?style=flat&logo=nextflow&logoColor=white&color=%230DC09D&link=https%3A%2F%2Fnextflow.io)](https://www.nextflow.io/)
@@ -15,42 +15,47 @@
 [![run with conda](http://img.shields.io/badge/run%20with-conda-3EB049?labelColor=000000&logo=anaconda)](https://docs.conda.io/en/latest/)
 [![run with docker](https://img.shields.io/badge/run%20with-docker-0db7ed?labelColor=000000&logo=docker)](https://www.docker.com/)
 [![run with singularity](https://img.shields.io/badge/run%20with-singularity-1d355c.svg?labelColor=000000)](https://sylabs.io/docs/)
-[![Launch on Seqera Platform](https://img.shields.io/badge/Launch%20%F0%9F%9A%80-Seqera%20Platform-%234256e7)](https://cloud.seqera.io/launch?pipeline=https://github.com/nf-core/nanometaepigenomics)
+[![Launch on Seqera Platform](https://img.shields.io/badge/Launch%20%F0%9F%9A%80-Seqera%20Platform-%234256e7)](https://cloud.seqera.io/launch?pipeline=https://github.com/JD2112/nanometaepigenomics)
 
-[![Get help on Slack](http://img.shields.io/badge/slack-nf--core%20%23nanometaepigenomics-4A154B?labelColor=000000&logo=slack)](https://nfcore.slack.com/channels/nanometaepigenomics)[![Follow on Bluesky](https://img.shields.io/badge/bluesky-%40nf__core-1185fe?labelColor=000000&logo=bluesky)](https://bsky.app/profile/nf-co.re)[![Follow on Mastodon](https://img.shields.io/badge/mastodon-nf__core-6364ff?labelColor=FFFFFF&logo=mastodon)](https://mstdn.science/@nf_core)[![Watch on YouTube](http://img.shields.io/badge/youtube-nf--core-FF0000?labelColor=000000&logo=youtube)](https://www.youtube.com/c/nf-core)
+[![Get help on Slack](http://img.shields.io/badge/slack-nf--core-4A154B?labelColor=000000&logo=slack)](https://nf-co.re/join)[![Follow on Bluesky](https://img.shields.io/badge/bluesky-%40nf__core-1185fe?labelColor=000000&logo=bluesky)](https://bsky.app/profile/nf-co.re)[![Follow on Mastodon](https://img.shields.io/badge/mastodon-nf__core-6364ff?labelColor=FFFFFF&logo=mastodon)](https://mstdn.science/@nf_core)[![Watch on YouTube](http://img.shields.io/badge/youtube-nf--core-FF0000?labelColor=000000&logo=youtube)](https://www.youtube.com/c/nf-core)
+
+> [!NOTE]
+> **nf-core Candidate Pipeline:** This pipeline is developed according to nf-core DSL2 standards and guidelines, and is being prepared for submission to the [nf-core](https://nf-co.re) community.
+> Repository development URL: [https://github.com/JD2112/nanometaepigenomics](https://github.com/JD2112/nanometaepigenomics)
 
 ## Introduction
 
-**nf-core/nanometaepigenomics** is a clinical-grade, end-to-end bioinformatics pipeline designed for Oxford Nanopore Technologies (ONT) long-read metagenomic sequencing. It couples high-accuracy long-read metagenomic de novo assembly and Metagenome-Assembled Genome (MAG) recovery with native bacterial epigenetic profiling (5mC/5hmC/6mA methylation calling and motif identification). Crucially, the pipeline leverages `Nanomotif` to link unbinned mobile genetic elements (plasmids and phages identified by `geNomad`) back to host bacterial MAGs via shared restriction-modification methylation motifs.
+**nanometaepigenomics** (candidate: `nf-core/nanometaepigenomics`) is a clinical-grade, reproducible bioinformatics pipeline designed for Oxford Nanopore Technologies (ONT) metagenomic sequencing. It couples high-accuracy long-read assembly and metagenome-assembled genome (MAG) recovery with native bacterial epigenetic profiling (5mC/5hmC methylation calling and motif identification). Crucially, the pipeline leverages `Nanomotif` to link unbinned mobile genetic elements (plasmids and phages identified by `geNomad`) back to host bacterial MAGs via shared restriction-modification methylation motifs.
 
-![nf-core/nanometaepigenomics workflow](docs/images/nanometaepigenomics_workflow.png)
+![nf-core/nanometaepigenomics workflow](docs/images/pipeline.png)
 
 ### Pipeline Steps Overview
 
-1. **Raw Read QC & Basecalling**:
+1. **Raw Read Preflight QC**:
    - Sequencing read QC ([`NanoPlot`](https://github.com/wdecoster/NanoPlot)).
-   - GPU-accelerated basecalling and modified basecalling with MM/ML tags ([`Dorado`](https://github.com/nanoporetech/dorado)).
+2. **Basecalling & Quality Preprocessing**:
+   - Optional GPU-accelerated basecalling & modified base calling with MM/ML tags ([`Dorado`](https://github.com/nanoporetech/dorado)).
    - Adapter trimming ([`Porechop_ABI`](https://github.com/bonsai-team/Porechop_ABI)) and length/quality filtering ([`Filtlong`](https://github.com/rrwick/Filtlong)).
-2. **2-Stage Host Decontamination**:
+3. **2-Stage Host Decontamination**:
    - Stage 1: Human GRCh38 privacy screening and depletion ([`Minimap2`](https://github.com/lh3/minimap2) + [`Samtools`](http://www.htslib.org/)).
    - Stage 2: Background food matrix / declared host depletion ([`Minimap2`](https://github.com/lh3/minimap2) + [`Mosdepth`](https://github.com/brentp/mosdepth)).
-3. **De Novo Assembly & MGE Prediction**:
+4. **Metagenomic Assembly & MGE Prediction**:
    - Long-read metagenome assembly ([`metaFlye`](https://github.com/fenderglass/Flye)).
    - Plasmid and viral element identification ([`geNomad`](https://github.com/apcamargo/genomad)).
-4. **Binning & MAG Profiling**:
-   - Metagenomic binning ([`MetaBAT2`](https://bitbucket.org/berkeleylab/metabat/src/master/)).
+5. **Binning, QC & Taxonomy**:
+   - Read mapping to contigs with [`Minimap2`](https://github.com/lh3/minimap2) and depth calculation with [`MetaBAT2 (jgi_summarize_bam_contig_depths)`](https://bitbucket.org/berkeleylab/metabat).
+   - Metagenomic binning ([`MetaBAT2`](https://bitbucket.org/berkeleylab/metabat) or [`SemiBin2`](https://github.com/BigDataBiology/SemiBin)).
    - MAG quality and completeness assessment ([`CheckM2`](https://github.com/chklovski/CheckM2)).
    - Taxonomic classification ([`GTDB-Tk`](https://github.com/Ecogenomics/GTDBTk)).
-5. **Epigenomics & Plasmid-Host Linkage**:
+6. **Meta-epigenomics & Functional Annotation**:
    - Modification pileup generation ([`Modkit`](https://github.com/nanoporetech/modkit)).
    - De novo bacterial methylation motif discovery and plasmid-to-host genome association ([`Nanomotif`](https://github.com/philshanc/nanomotif)).
-6. **Surveillance & Functional Annotation**:
    - Antimicrobial resistance profiling ([`AMRFinderPlus`](https://github.com/ncbi/amr)).
-   - Virulence factor screening ([`ABRICATE`](https://github.com/tseemann/abricate) with VFDB) and plasmid replicon typing ([`PlasmidFinder`](https://bitbucket.org/genomicepidemiology/plasmidfinder/src/master/)).
+   - Virulence factor screening ([`ABRICATE`](https://github.com/tseemann/abricate) with VFDB) and plasmid replicon typing ([`PlasmidFinder`](https://bitbucket.org/genomicepidemiology/plasmidfinder)).
    - Rapid prokaryotic genome functional annotation ([`Bakta`](https://github.com/oschwengers/bakta)).
 7. **Quality Control & Reporting**:
    - Audit manifest generation (`*_run_manifest.json`) and clinical summary table (`*_clinical_report.tsv`).
-   - Aggregate quality reports across all tools ([`MultiQC`](http://multiqc.info/)).
+   - Summary report with [`MultiQC`](http://multiqc.info/).
 
 ## Usage
 
@@ -67,27 +72,29 @@ SAMPLE_1,/path/to/reads/SAMPLE_1.fastq.gz
 SAMPLE_2,/path/to/reads/SAMPLE_2.fastq.gz
 ```
 
-Each row represents an ONT run with long reads (gzipped FASTQ). If starting directly from Oxford Nanopore raw signal data (`.pod5`), you can point the pipeline to your POD5 folder via `--pod5_dir`.
+Each row represents an ONT run with long reads (gzipped FASTQ or BAM with MM/ML tags). If starting directly from Oxford Nanopore raw signal data (`.pod5`), you can point the pipeline to your POD5 folder via `--pod5_dir`.
 
-Now, you can run the pipeline using:
+Launch the pipeline:
 
 ```bash
-nextflow run nf-core/nanometaepigenomics \
-   -profile <docker/singularity/.../institute> \
+nextflow run JD2112/nanometaepigenomics \
+   -profile <docker/singularity/conda> \
    --input samplesheet.csv \
-   --outdir <OUTDIR>
+   --human_fasta /path/to/GRCh38.fa \
+   --host_fasta /path/to/food_host.fa \
+   --outdir results/
 ```
 
 > [!WARNING]
 > Please provide pipeline parameters via the CLI or Nextflow `-params-file` option. Custom config files including those provided by the `-c` Nextflow option can be used to provide any configuration _**except for parameters**_; see [docs](https://nf-co.re/docs/running/run-pipelines#using-parameter-files).
 
-For more details and further functionality, please refer to the [usage documentation](https://nf-co.re/nanometaepigenomics/usage) and the [parameter documentation](https://nf-co.re/nanometaepigenomics/parameters).
+For more details and further functionality, please refer to the [usage documentation](docs/usage.md) and the [output documentation](docs/output.md).
 
 ## Pipeline output
 
 To see the results of an example test run with a full size dataset refer to the [results](https://nf-co.re/nanometaepigenomics/results) tab on the nf-core website pipeline page.
 For more details about the output files and reports, please refer to the
-[output documentation](https://nf-co.re/nanometaepigenomics/output).
+[output documentation](docs/output.md).
 
 ## Credits
 

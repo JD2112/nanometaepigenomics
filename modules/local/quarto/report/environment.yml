@@ -1,0 +1,9 @@
+name: quarto_report
+channels:
+  - conda-forge
+dependencies:
+  - conda-forge::quarto=1.4.550
+  - conda-forge::r-base=4.3.3
+  - conda-forge::r-jsonlite=1.8.8
+  - conda-forge::r-knitr=1.46
+  - conda-forge::r-kableextra=1.4.0
