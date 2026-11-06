@@ -8,3 +8,6 @@ testing*
 *.pyc
 null/
 .lineage/
+docs/images/pipeline_updated*.png
+docs/images/pipeline_white*.png
+docs/images/pipeline_metro*.png
